@@ -9,38 +9,42 @@ import WhyChoose from '../global/whyChoose';
 import FooterComponent from '../global/Footer';
 import Slider from './Slider';
 import Offer from './offerComponent' 
+import FackOffer from './FackOffer' 
+
+
 import HomeCategory from './HomeCategory'
+import HomeProduct from './HomeProduct'
 
-  export default function HomeComponent(props) {
-   
 
+  export default function HomeComponent(props) { 
 const [slider,setSlider]=useState([])
-const [offer,setOffer]=useState([])
- 
+const [offer,setOffer]=useState([]) 
+const [products,setProduct]=useState([]) 
 const [category,setCategory]=useState([])
 const [page,setPage]=useState(1)
 useEffect(() => {
   getOffer(); 
- getApiData();
-
-   
+ getApiData(); 
+ homeProduct()  
 }, [])
 
 useEffect(() => { 
-   getCategory()
- 
+   getCategory() 
  }, [page])
+
 const getApiData=()=>{ 
   let slider_url=websiteApi+"/mobileSliders"; 
   let config={method:'GET'}
    fetch(slider_url,config).then((result)=>result.json()). 
-   then((response)=>{      
-    setSlider(response.slider_picture)
+   then((response)=>{ 
+     
+    setSlider(response)
    }).catch((error)=>{
    
     }); 
    
 }
+
 
 getOffer=()=>{
      let offferUrl=websiteApi+"/homeOffers";  
@@ -52,24 +56,30 @@ getOffer=()=>{
     }).catch(error => {
        });
 }
-getCategory=()=>{
 
-  
-    let home_category_url=websiteApi+"/home-mobile-category?page="+page;  
+
+const homeProduct=()=>{
+  let productUrl=websiteApi+"/homeProduct";  
+ let config={method:'GET'}
+   fetch(productUrl,config).
+   then((result)=>result.json()).
+   then((response)=>{  
+      setProduct(response)        
+ }).catch(error => {
+    });
+}
+getCategory=()=>{  
+    let home_category_url=websiteApi+"/home-mobile-category";  
     let config={method:'GET'}
         fetch(home_category_url,config).
       then((result)=>result.json()).
-      then((response)=>{   
-       
-        setCategory(category.concat(response.data))
-        
+      then((response)=>{ 
+          setCategory(response)        
     }) .catch(error => {
         
       });
 }
-getMoreCategory =()=>{
-  setPage(page+1)
-}
+
  
  
     return (
@@ -77,26 +87,58 @@ getMoreCategory =()=>{
       <Container>
          <HeaderComponent navigation={props.navigation} />  
         <ScrollView nestedScrollEnabled >          
-      <Slider slider={slider} />
-      <Offer  offer={offer} navigation={props.navigation}/> 
-      
-      
-      <FlatList
-      
+        <Slider slider={slider} />  
+
+       {offer ? 
+      <Offer  offer={offer} navigation={props.navigation}/>    
+      :
+      <FackOffer  navigation={props.navigation}/>
+      }    
+
+<View style={{flex:2,flexDirection:"row",padding:10,justifyContent:"center"}}>
+  <View style={{flex:1,backgroundColor:"#2cb574",}}>
+      <Text style={{textAlign:"left",padding:2,margin:5,color:"white",fontWeight:"bold"}}>Top Categories
+</Text>
+</View>
+<View style={{flex:1,backgroundColor:"#2cb574",alignItems:"center",justifyContent:"center"}}>
+      <Text onPress={() => props.navigation.navigate('AllCategory')}
+      style={{backgroundColor:"#2cb574",padding:2,textAlign:"right",alignSelf:"center",color:"white",fontWeight:"bold"}}>All  Categories 
+      {/* <Icon name="keyboard-arrow-right" type="MaterialIcons"/>    */}
+</Text>
+</View>  
+ </View>
+       
+         <FlatList      
         numColumns={2}
         data={category}
         renderItem={({item})=><HomeCategory navigation={props.navigation} category_title={item.category_title}  category_id={item.category_id} banner={item.banner} />}
-        keyExtractor={(item) => item.category_id}      
-        onEndReached={getMoreCategory}
-        onEndReachedThreshold={.3}  
-      />   
+        keyExtractor={(item) => item.category_id}   
        
-     <WhyChoose  />
+      />  
 
+      <View style={{flex:2,flexDirection:"row",padding:10,justifyContent:"center"}}>
+  <View style={{flex:1,backgroundColor:"#2cb574",}}>
+      <Text style={{textAlign:"left",padding:2,margin:5,color:"white",fontWeight:"bold"}}>Popular Products
+</Text>
+</View>
+<View style={{flex:1,backgroundColor:"#2cb574",alignItems:"center",justifyContent:"center"}}>
+      <Text onPress={() => props.navigation.navigate('AllCategory')}
+      style={{backgroundColor:"#2cb574",padding:2,textAlign:"right",alignSelf:"center",color:"white",fontWeight:"bold"}}>All  Products 
+      {/* <Icon name="keyboard-arrow-right" type="MaterialIcons"/>    */}
+</Text>
+</View>  
+ </View>
+      <FlatList      
+        numColumns={2}
+        data={products}
+        renderItem={({item})=><HomeProduct navigation={props.navigation} folder={item.folder}  product_id={item.product_id} main_image={item.main_image} />}
+        keyExtractor={(item) => item.product_id}    
+       
+      />      
+        
       
      </ScrollView>
-     <FooterComponent navigation={props.navigation} />  
-   
+     <FooterComponent navigation={props.navigation} />    
        </Container>
        </View>  
     );

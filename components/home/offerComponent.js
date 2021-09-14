@@ -15,7 +15,7 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, Footer,FooterTab,
                >     
       <Card >  
             <CardItem cardBody  >
-              <Image source={{uri: API_Offer_Image_Url+""+row.offer_picture}} style={{height: 200, width: null, flex: 1, resizeMode: 'contain'}}/>
+              <Image source={{uri: API_Offer_Image_Url+""+row.offer_picture}} style={{height: 200, width: null, flex: 1, resizeMode: 'stretch'}}/>
             </CardItem>   
                   
       </Card>

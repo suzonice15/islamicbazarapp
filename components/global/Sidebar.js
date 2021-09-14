@@ -142,13 +142,8 @@ function Sidebar(props) {
                  <Text style={{marginLeft:10}}>Terms & Conditions</Text> 
                 </ListItem>
 
-                <ListItem onPress={()=>props.navigation.navigate('Page', {
-            pageLink:'emi-information',
-             
-          })}>
-                  <Icon name="open-book" type="Entypo"/>   
-                 <Text style={{marginLeft:10}}>EMI Information</Text> 
-                </ListItem>
+                
+
                 <ListItem onPress={()=>props.navigation.navigate('Page', {
             pageLink:'refund-and-returns-policy',
              
@@ -165,32 +160,10 @@ function Sidebar(props) {
                  <Text style={{marginLeft:10}}>Privacy Policy</Text> 
                 </ListItem>
                
-                <ListItem onPress={()=>props.navigation.navigate('Page', {
-            pageLink:'delivery',             
-          })}>
-                  <Icon name="open-book" type="Entypo"/>   
-                 <Text style={{marginLeft:10}}>Delivery</Text> 
-                </ListItem>
-                <ListItem onPress={()=>props.navigation.navigate('Page', {
-            pageLink:'help',             
-          })}>
-                  <Icon name="open-book" type="Entypo"/>   
-                 <Text style={{marginLeft:10}}>Help</Text> 
-                </ListItem>
-
-                <ListItem onPress={()=>props.navigation.navigate('Page', {
-            pageLink:'notice',             
-          })}>
-                  <Icon name="open-book" type="Entypo"/>   
-                 <Text style={{marginLeft:10}}>Notice</Text> 
-                </ListItem>
+                
+                
               
-                <ListItem onPress={()=>props.navigation.navigate('Page', {
-            pageLink:'how-to-buy',             
-          })}>
-                  <Icon name="open-book" type="Entypo"/>   
-                 <Text style={{marginLeft:10}}>How to buy</Text> 
-                </ListItem>
+               
                 
 
                 </List>
