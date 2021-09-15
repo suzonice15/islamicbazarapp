@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, FooterTab,Text,Input, Left, Body, Right, Button, Icon, Title } from 'native-base';
+import {Toast, Thumbnail,Card,CardItem,Content,Container,Item,Badge, FooterTab,Text,Input, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { SliderBox } from "react-native-image-slider-box";
 import { Image, View,ScrollView,FlatList } from 'react-native';
 import WhyChoose from '../global/whyChoose';
@@ -11,81 +11,76 @@ import Offer from './Offer'
 import axios from 'axios';
 
 import LoadingActivator from '../global/LoadingActivator';
+import ProductRender from '../brand/ProductRender';
 
 
   export default function Category(props) {
-    const {category_id}=props.route.params
-
-    const [category,setCategory]=useState([])
-    const [offerData,setOffer]=useState([])
-    const [loading,setLoading]=useState(true)
-  
-
-useEffect(() => { 
-    getCategory()
-   
+    const {category_id,category_title}=props.route.params
+    const [products,setProduct]=useState([])
+     const [loading,setLoading]=useState(true)
+     const [page,setPage]=useState(1)
+     useEffect(() => { 
+    getCategory()  
  
  }, [category_id])
-
- useEffect(() => { 
-    
-    getOffer();
  
- }, [])
 
-const getCategory=()=>{ 
-  
+const getCategory=()=>{  
   let category_url=websiteApi+"/mobile-category/"+category_id; 
   let config={method:'GET'}
    fetch(category_url,config).then((result)=>result.json()). 
-   then((response)=>{        
-    setCategory(response.brands)
+   then((response)=>{    
+      setProduct(response);    
     setLoading(false)
    }).catch((error)=>{
    
     });    
 } 
 
-const getOffer=()=>{ 
-  
-  let offerUrl=websiteApi+"/offers";  
-  axios.get(offerUrl).then(response=>{ 
-      console.log(response.data)     
-    setOffer(response.data) 
-  })   
-} 
+const addToCart=(cart_product_id,product_title)=>{    
+        
+  Toast.show({
+   text: product_title+" Added to your Cart",
+   type:"success"
+   
+ })
+var add_cart_url=websiteApi+"addCart/"+cart_product_id+"/1"
+let config={method:'GET'}
+fetch(add_cart_url,config).then((result)=>result.json()). 
+then((response)=>{    
+console.log(response)
+}).catch((error)=>{
+
+})
+
+}
+ 
  
  
     return (
       <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
       <Container>
          <HeaderComponent navigation={props.navigation} />  
-        <ScrollView scrollEnabled>  
-
-
-       { loading ? <LoadingActivator  /> : 
-
-
-        <>
-        <FlatList
-      
+        <ScrollView scrollEnabled> 
+        <View style={{flex:2,flexDirection:"row",padding:10,justifyContent:"center"}}>
+  <View style={{flex:1,backgroundColor:"#2cb574",}}>
+      <Text style={{textAlign:"center",padding:2,margin:5,color:"white",fontWeight:"bold"}}>{category_title}</Text>
+</View>  
+ </View> 
+       { loading ? <LoadingActivator  /> :
+       <FlatList      
         numColumns={2}
-        data={category}
-        renderItem={({item})=>
-        
-        <RenderItem navigation={props.navigation} brand_title={item.brand_title}  brand_id={item.brand_id} brand_picture={item.brand_picture} />
-        
-    }
-        keyExtractor={(item,index) => index.toString()}      
-        
-      />   
-    {offerData.map((offer,index)=>   
-      <Offer  navigation={props.navigation} offer_title={offer.offer_title}  offer_name={offer.offer_name} offer_end_date={offer.offer_end_date}  offer_start_date={offer.offer_start_date} offer_picture={offer.offer_picture}/>
-      
-    )} 
-     <WhyChoose  />
-     </>
-
+        data={products}
+        renderItem={({item})=><ProductRender navigation={props.navigation}
+         product_id={item.product_id}  main_image={item.main_image} 
+         folder={item.folder} product_title={item.product_title} 
+         discount_price={item.discount_price} product_price={item.product_price} 
+         addToCart={addToCart}
+         />}
+        keyExtractor={(item) => item.product_id}      
+        onEndReached={()=> setPage(page+1)}
+        onEndReachedThreshold={.3}  
+      /> 
     }
 
       

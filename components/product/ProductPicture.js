@@ -15,21 +15,34 @@ import WhyChoose from '../global/whyChoose';
        <Content padder>
           <Card>
                <CardItem cardBody style={{backgroundColor:"#efefef"}}>
-              <Image source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+mainPicture}} style={{height: 200, width: null, flex: 1,resizeMode:"cover"}}/>
+              <Image source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+mainPicture}} style={{height: 450, width: null, flex: 1,resizeMode:"stretch"}}/>
             </CardItem>
+           
+           {galary_image_1 ? 
             <CardItem>             
-              <Body style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
+              <Body style={{flex:1,flexDirection:"row",justifyContent:"space-evenly"}}>
                   <TouchableWithoutFeedback onPress={()=>setMainPictureFunction(main_image)}>
-              <Thumbnail  square large  source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+main_image}} />
+              <Thumbnail  square large  source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+main_image}} style={{resizeMode:"center", borderWidth: 1,
+    borderColor: "thistle",
+    padding:10
+   }} />
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={()=>setMainPictureFunction(galary_image_1)}>
-              <Thumbnail   square large source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+galary_image_1}}   />
+              <Thumbnail   square large source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+galary_image_1}}  style={{resizeMode:"contain", borderWidth: 1,
+    borderColor: "thistle",
+    padding:10
+   }} />
               </TouchableWithoutFeedback>
                <TouchableWithoutFeedback onPress={()=>setMainPictureFunction(galary_image_2)}>
-              <Thumbnail   square large source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+galary_image_2}}    />
+              <Thumbnail   square large source={{uri: API_Product_featured_Image_Url+"/"+folder+"/"+galary_image_2}}   style={{ resizeMode:"cover",borderWidth: 1,
+    borderColor: "thistle",
+    padding:10
+   }}  />
               </TouchableWithoutFeedback>
               </Body>              
             </CardItem>
+            :null }
+
           </Card>
         </Content>  
      

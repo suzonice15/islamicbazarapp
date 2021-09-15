@@ -23,13 +23,10 @@ import axios from 'axios';
    }).catch((error)=>{       }); 
 
            
-      };
-
-       
+      };      
      
       useEffect(()=>{         
-        getWishlists()
-              
+        getWishlists()              
         setLoding(false)
       },[loadding])
 
@@ -37,14 +34,17 @@ import axios from 'axios';
         Toast.show({
           text:product_title +"\n Added successfully",       
           type: "success"
-        })   
-        var addTocart=websiteApi+"addToCartFromWishlist/"+wishlist_id; 
-        const response=await fetch(addTocart);
-    var  cart= await response.json();
+        }) 
+        var addTocart=websiteApi+"addToCartFromWishlist/"+wishlist_id;   
+        let config={method:'GET'}
+        fetch(addTocart,config).then((result)=>result.json()). 
+   then((response)=>{      
+   
     
-    localStorage.setItem('wishlist_count',cart)
-    
-    getWishlist()
+   }).catch((error)=>{       }); 
+
+   getWishlists()
+   
      
       }
       
@@ -53,13 +53,15 @@ import axios from 'axios';
             text: "\n Deleted successfully",       
             type: "success"
           })          
-        var cart_delete_url=websiteApi+"allWishDelete/"; 
+        var cart_delete_url=websiteApi+"allWishDelete"; 
         const response=await fetch(cart_delete_url);
     var  cart= await response.json();   
     getWishlists()    
       } 
 
-  const wishlistDelete=(cart_id,product_title)=>{   
+  const wishlistDelete=(cart_id,product_title)=>{
+   
+    
 
         Toast.show({
           text:  product_title+"\n Remove successfully",        
@@ -67,37 +69,47 @@ import axios from 'axios';
         })  
     var wishlist_url=websiteApi+"removeWishlist/"+cart_id;    
 let config={method:'GET'}
-axios.get(wishlist_url).then((response)=>{
-  console.log(response)
-  getWishlists()
-})
- 
-   }  
+console.log(wishlist_url)
+
+fetch(wishlist_url,config)
+.then((result)=>result.json())
+.then((response)=>{  
+  console.log(response)    
+  getWishlists() 
+}).catch((error)=>{       }); 
+
+}  
+
+
+   
 
    const wishlistAllDelete=()=>{   
 
     Toast.show({
-      text:  product_title+"\n Remove successfully",        
+      text:  "\n Remove successfully",        
       type: "success"
     })  
 var wishlist_url=websiteApi+"removeAllWishlist";    
 let config={method:'GET'}
-axios.get(wishlist_url).then((response)=>{
-console.log(response)
-getWishlists()
-})
+fetch(wishlist_url,config).then((result)=>result.json()). 
+then((response)=>{  
+  console.log(response)    
+  getWishlists() 
+}).catch((error)=>{       }); 
 
-}  
+}
+  
 
 
   const currencyFormat=num=> {
     return (
      <> <Icon tyle={{fontSize:10}} name="currency-bdt" type="MaterialCommunityIcons" /> {parseFloat(num).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
-    </>)} 
+    </>)
+    } 
  
     return (
      
-      <Container style={{flex:10,backgroundColor:'#f2f2f2'}} >
+      <Container style={{flex:10,backgroundColor:'#ddd'}} >
       <Header>
           <Left>
             <Button onPress={() => props.navigation.goBack(null)}    transparent>
@@ -106,7 +118,7 @@ getWishlists()
           </Left>
 
           <Body>
-            <Title>Wishlist x </Title>
+            <Title>Wishlist </Title>
           </Body>
           <Right>
             <Button onPress={() => setModalVisible(true)} transparent>
@@ -115,7 +127,6 @@ getWishlists()
           </Right>
         </Header>
         <View style={{flex:9}}>
-
         <View style={{flex:8}}>
         <ScrollView style={{marginTop:20}}>  
         {loadding && <LoadingActivator />}       
@@ -138,12 +149,11 @@ getWishlists()
               <Text style={{alignSelf:"center"}}>{cart.price}*{cart.qty}={cart.subtotal}</Text>
               </View> 
               <View style={{flex:1,flexDirection:"row",justifyContent:"space-around"}}> 
-              <TouchableWithoutFeedback onPress={()=>Decrement(cart.cart_id,cart.product_name)}>
-              <Button small success onPress={()=>addToCartFromWishlist(cart.cart_id,cart.product_name)}>
- 
+               
+              <Button small success onPress={()=>addToCartFromWishlist(cart.wishlist_id,cart.product_name)}> 
                   <Text>Add To Cart</Text></Button>
-                  </TouchableWithoutFeedback>
-             <TouchableWithoutFeedback onPress={()=>wishlistDelete(cart.cart_id,cart.product_name)}>
+                 
+             <TouchableWithoutFeedback onPress={()=>wishlistDelete(cart.wishlist_id,cart.product_name)}>
               <Text>
                 <Icon style={{color:"red"}} name="ios-trash-sharp" type="Ionicons" /></Text>
               </TouchableWithoutFeedback>
@@ -157,9 +167,15 @@ getWishlists()
         
          })} 
       
-     </ScrollView>
+     </ScrollView>   
 
-     <Modal
+          
+</View>
+
+<FooterComponent navigation={props.navigation}></FooterComponent>
+
+
+<Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -184,50 +200,6 @@ getWishlists()
               onPress={() => {
                 setModalVisible(!modalVisible)
                 wishlistAllDelete()
-              }
-              
-              }
-            >
-    <Text>Ok</Text>
-    </Pressable>
-</View>
-          </View>
-
-          
-          </View>
-      </Modal>
-
-          
-</View>
-
-<FooterComponent navigation={props.navigation}></FooterComponent>
-
-
-<Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {        
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={{fontSize:18}}>Are you sure you want to delete the selected products from the cart ?</Text>
-
-<View style={{flexDirection:"row",marginTop:20,justifyContent:"space-evenly",alignItems:"center"}}>
- 
-<Pressable
-              
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-  <Text style={{marginRight:20}}>Cancel</Text>
-  </Pressable>
-
-  <Pressable             
-              onPress={() => {
-                setModalVisible(!modalVisible)
-                allCartDelete()
               }
               
               }

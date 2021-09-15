@@ -3,47 +3,43 @@ import { Segment,Thumbnail,Card,CardItem,Content,Text,Input, Left, Body, Right, 
  import { Image, View,ScrollView,FlatList ,TouchableWithoutFeedback} from 'react-native';
  
  import HTMLView from 'react-native-htmlview';
+import RelatedProduct from  '../product/RelatedProduct';
 
 
-    function ProductCartSection({BuyNow,addToWishList,addToCart,increment,decrement,count,product_title,sku,product_short_description,product_price,discount_price}) {
+    function ProductCartSection({navigation,products,BuyNow,addToWishList,addToCart,increment,decrement,count,product_title,sku,product_short_description,product_price,discount_price}) {
     
 console.log("product_cart_section")
     return (
         <Content padder style={{marginTop:-15,flex:1,flexDirection:"column"}} >
        
         <Card>
-        <CardItem  cardBody style={{backgroundColor:"#efefef"}}>
+      
+        {/* <CardItem  cardBody style={{backgroundColor:"#efefef"}}>
         <Text style={{padding:5,marginLeft:5}} >{ product_title}</Text>
+       </CardItem> */}
 
-
-       </CardItem>
        <CardItem  cardBody style={{backgroundColor:"#efefef"}}>
-
-        <Text style={{padding:10,backgroundColor:"#b5f7c4",marginLeft:5,borderRadius:50,width:170}} >Product Code :{sku}</Text>
+        <Text style={{padding:10,backgroundColor:"#b5f7c4",marginLeft:5,borderRadius:50,width:"50%"}} >Product Code :{sku}</Text>
        
        </CardItem>
-       <CardItem  cardBody style={{backgroundColor:"#efefef"}}>
 
+       { product_short_description ? 
+       <><CardItem  cardBody style={{backgroundColor:"#efefef"}}>
 <Text style={{padding:5,marginLeft:5}} >Key Features</Text>
-
 </CardItem>
 <CardItem  cardBody style={{backgroundColor:"#efefef"}}>
-
 <View  style={{padding:5,marginLeft:5}}>
-<HTMLView
-      value={product_short_description}
-     
+<HTMLView  value={product_short_description}     
     />
 </View>
+</CardItem></> :null }
 
-
-</CardItem>
 <CardItem  cardBody style={{backgroundColor:"#efefef",marginLeft:5}}>
 
-{ discount_price !=='' ?  <Text style={{color:'black',textAlign:'center',height:40,fontSize:25}}>৳ {discount_price}</Text> : <Text style={{marginTop:5,color:'black',marginLeft:5,textAlign:'center',height:40,fontSize:15}}>৳ {product_price}</Text>		 
+{ discount_price >0 ?  <Text style={{color:'black',textAlign:'center',height:40,fontSize:25}}>৳ {discount_price}</Text> : <Text style={{marginTop:5,color:'black',marginLeft:5,textAlign:'center',height:40,fontSize:15}}>৳ {product_price}</Text>		 
 }
        
-       { discount_price !=='' ?  <Text style={{color:'red',textAlign:'center',marginLeft:5,height:40,fontSize:25}}>৳ {product_price}</Text> : null }
+       { discount_price >0 ?  <Text style={{color:'red',textAlign:'center',marginLeft:5,height:40,fontSize:25}}>৳ {product_price}</Text> : null }
   
        </CardItem>
 
@@ -61,7 +57,7 @@ console.log("product_cart_section")
 
  </CardItem>    
               
-               <CardItem   cardBody style={{backgroundColor:"#efefef",marginTop:8,flex:1,flexDirection:"row",justifyContent:"space-evenly"}}>
+      <CardItem   cardBody style={{backgroundColor:"#efefef",marginTop:8,flex:1,flexDirection:"row",justifyContent:"space-evenly"}}>
                 
         <Button small iconLeft  onPress={()=>addToCart(product_title)}  success style={{width:"42%",}}>
         <Icon name='shoppingcart' type="AntDesign" />
@@ -74,8 +70,35 @@ console.log("product_cart_section")
         </Button>
         <Button onPress={()=>addToWishList(product_title)}  small  info style={{width:"16%"}}>
           <Icon name="heart" />
+          <Text>Favorite</Text>
         </Button>
-       </CardItem>        
+       </CardItem>   
+
+       {/* {products.map((product,index)=>{
+         return (
+          <Text>{product.product_title}</Text>
+         )
+        
+         })} */}
+
+          
+          <FlatList      
+       
+        data={products}
+        renderItem={({item})=><RelatedProduct 
+        navigation={navigation} 
+        folder={item.folder} 
+        product_title={item.product_title} 
+         product_id={item.product_id} 
+         main_image={item.main_image} 
+         product_price={item.product_price}
+         discount_price={item.discount_price}
+         />}
+        keyExtractor={(item) => item.product_id}    
+       
+      /> 
+
+
 </Card>
      </Content>
     );

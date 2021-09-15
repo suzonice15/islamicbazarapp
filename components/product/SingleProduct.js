@@ -8,6 +8,7 @@ import FooterComponent from '../global/Footer';
 import axios from 'axios';
 import HTMLView from 'react-native-htmlview';
 import { WebView } from 'react-native-webview';
+import { useScrollToTop } from '@react-navigation/native';
 
 
 import LoadingActivator from '../global/LoadingActivator';
@@ -17,11 +18,14 @@ import ProductRender from '../brand/ProductRender';
 
 
   export default function SingleProduct(props){
-    const {product_id}=props.route.params
-     const [loading,setLoading]=useState(true) 
+    const {product_id,product_title}=props.route.params
+     const [loading,setLoading]=useState(false) 
      const [specifications, setSpecification]=useState([])
      const [relatedProducts, setRelated]=useState([]);
+     const [relatedProductsData,setRelatedProductIdData]=useState([])
+     const ref = React.useRef(null);
 
+     useScrollToTop(ref);
      const [count,setCount]=useState(1) 
      const [active,setActive]=useState({
         descriptionActive:true,
@@ -43,16 +47,25 @@ import ProductRender from '../brand/ProductRender';
   
 
 useEffect(() => { 
+  
     getProduct()  
     getSpecification(product_id)
       getRelatedProduct(product_id)
+      getRelatedProductIdData();
  
  }, [product_id])
 
+ const getRelatedProductIdData=async()=>{
+  const url=websiteApi+`relatedProductListById/${product_id}`;
+ const  response=await fetch(url);
+ var data=await response.json(); 
+ 
+ setRelatedProductIdData(data);
+}
+
  const getRelatedProduct=()=>{
-  var related_base_url=websiteApi+"related-product/"+products.products.brand_id+"/"+product_id;
-  axios.get(related_base_url).then((response)=>{
-  
+  var related_base_url=websiteApi+"related-product/"+product_id;
+  axios.get(related_base_url).then((response)=>{  
     setRelated(response.data);
 
   }) 
@@ -69,10 +82,8 @@ const getProduct=()=>{
       galary_image_1:response.data.galary_image_1,
       galary_image_2:response.data.galary_image_2,
       folder:response.data.folder,
-
-
     }) 
-    setLoading(false)
+    setLoading(true)
     setProduct({       
           products:response.data,
     })  
@@ -94,15 +105,13 @@ const getProduct=()=>{
 },[count])
 
 
-const addToCart=useCallback((product_title)=>{    
-  
+const addToCart=useCallback((product_title)=>{ 
     Toast.show({
       text: product_title+"\n Added Successfully",       
       type: "success"
     })
 var add_cart_url=websiteApi+"addCart/"+products.products.product_id+"/"+count
-axios.get(add_cart_url).then(response=>{
-  
+axios.get(add_cart_url).then(response=>{  
  //setUserCartItem(response.data)/
 })
 
@@ -190,6 +199,25 @@ const getSpecification=async(product_id)=>{
 })
 }
 
+
+const addToCartProduct=(cart_product_id,product_title)=>{    
+        
+  Toast.show({
+   text: product_title+" Added to your Cart",
+   type:"success"
+   
+ })
+var add_cart_url=websiteApi+"addCart/"+cart_product_id+"/1"
+let config={method:'GET'}
+fetch(add_cart_url,config).then((result)=>result.json()). 
+then((response)=>{    
+console.log(response)
+}).catch((error)=>{
+
+})
+
+}
+
 const DescriptionDataLoad=()=>{
   if(active.descriptionActive){
     return (
@@ -220,14 +248,14 @@ const DescriptionDataLoad=()=>{
     )
   } else if(active.videoActive){
     return(
-      <View style={{flex: 1,height:500}}>
-        
+      <View style={{flex: 1,height:300}}>
+        {products.products.product_video ? 
     <WebView
         style={ {  marginTop: (Platform.OS == 'ios') ? 20 : 0,} }
         javaScriptEnabled={true}
         domStorageEnabled={true}
         source={{uri: 'https://www.youtube.com/embed/'+products.products.product_video }}
-     />
+     /> :<Text>There are no video to this product</Text>}
 </View>
     )
   } else{
@@ -236,10 +264,7 @@ const DescriptionDataLoad=()=>{
         <Text>UnderConstruction</Text>
       </View>
     )
-  }   
-
-  
-
+  }  
 }
  
  
@@ -247,12 +272,28 @@ const DescriptionDataLoad=()=>{
       <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
       <Container>
          <HeaderComponent navigation={props.navigation} />  
-        <ScrollView scrollEnabled style={{backgroundColor:"#fff"}}>  
+        <ScrollView ref={ref} scrollEnabled style={{backgroundColor:"#fff"}}>       
+       
+        <View style={{flex:2,flexDirection:"row",padding:10,justifyContent:"center"}}>
+  <View style={{flex:1,backgroundColor:"#2cb574",}}>
+      <Text style={{textAlign:"center",padding:2,margin:5,color:"white",fontWeight:"bold"}}>{product_title}</Text>
+</View>  
+ </View>  
 
 
-       {/* { loading &&  <LoadingActivator  />} */}
-   <ProductPicture  setMainPictureFunction={setMainPictureFunction} mainPicture={mainPicture.mainPicture} folder={mainPicture.folder} galary_image_1={mainPicture.galary_image_1} galary_image_2={mainPicture.galary_image_2}  main_image={mainPicture.main_image} />
+     
+   <ProductPicture 
+    setMainPictureFunction={setMainPictureFunction} 
+    mainPicture={mainPicture.mainPicture} 
+    folder={mainPicture.folder}
+     galary_image_1={mainPicture.galary_image_1} 
+     galary_image_2={mainPicture.galary_image_2} 
+      main_image={mainPicture.main_image} />
         
+        { loading ?    
+
+        <>
+
       <ProductCartSection  
       count={count}
       increment={increment}
@@ -265,33 +306,43 @@ const DescriptionDataLoad=()=>{
       discount_price={products.products.discount_price}
       product_short_description={products.products.product_short_description}
       sku={products.products.sku}
+      products={relatedProductsData}
+      navigation={props.navigation}
  
       
-      />        
+      /> 
+
+
+
+
 <Content padder style={{marginTop:-25,}}>
           <Card>
           
             <CardItem cardBody >
 
-        <View style={{flex:1,flexDirection:"row",justifyContent:"space-between"}}>
+        <View style={{flex:1,flexDirection:"row",justifyContent:"space-between",borderRadius:50}}>
           <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('description')}>
-          <Text   style={active.descriptionActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"red",width:"30%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"green",width:"30%"}}>Description</Text>
+          <Text   style={active.descriptionActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"30%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"30%"}}>Description</Text>
 
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('specification')}>
 
-            <Text   style={active.specificationActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"red",width:"35%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"green",width:"35%"} }>Specifications</Text>
+            <Text   style={active.specificationActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"35%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"35%"} }>Specifications</Text>
            
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('review')}>
 
-            <Text  style={active.reviewActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"red",width:"18.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"green",width:"18.5%"}}>Riview</Text>
+            <Text  style={active.reviewActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"18.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"18.5%"}}>Riview</Text>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('video')}>
 
-            <Text  style={active.videoActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"red",width:"17.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"green",width:"17.5%"}}>Video</Text>
+
+            <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('video')}>
+            <Text  style={active.videoActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"17.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"17.5%"}}>Video</Text>
             </TouchableWithoutFeedback>
-               </View>
+            
+
+
+              </View>
             </CardItem>
              
           </Card>
@@ -300,7 +351,7 @@ const DescriptionDataLoad=()=>{
         <Content padder>
           {DescriptionDataLoad()}
         </Content>
-       <Text style={{flex:1,backgroundColor:"red",padding:8,margin:5,textAlign:"center",color:"white"}}> Related Products </Text> 
+       <Text style={{flex:1,backgroundColor:"#2cb574",padding:8,margin:5,textAlign:"center",color:"white"}}> Related Products </Text> 
 
          <FlatList      
         numColumns={2}
@@ -309,16 +360,19 @@ const DescriptionDataLoad=()=>{
          product_id={item.product_id}  main_image={item.main_image} 
          folder={item.folder} product_title={item.product_title} 
          discount_price={item.discount_price} product_price={item.product_price} 
+         addToCart={addToCartProduct}
          />}
-        keyExtractor={(item) => item.brand_id}     
+        keyExtractor={(item) => item.product_id}  
+        
+        
       
          
       />  
-     
-{/*      
-     <WhyChoose  />
-  */}
-    
+
+</> :<LoadingActivator  />}
+
+
+
       
      </ScrollView>
      <FooterComponent  navigation={props.navigation} />  

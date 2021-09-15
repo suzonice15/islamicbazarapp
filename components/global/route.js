@@ -24,6 +24,7 @@ import BandProduct from '../brand/BandProduct'
  import ProductComponent from '../product/SingleProduct'
 import CartComponent from '../cart/cart'
 import WishlistComponent from '../wishlist/wishlist'
+import LoginComponent from '../auth/Login'
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -68,6 +69,9 @@ export default function Route() {
 
 
 <Drawer.Screen name="Wishlist" component={WishlistComponent}   options={{ headerShown: 
+   false }} />
+
+<Drawer.Screen name="login" component={LoginComponent}   options={{ headerShown: 
    false }} />
 
 

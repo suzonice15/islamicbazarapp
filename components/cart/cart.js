@@ -15,7 +15,6 @@ import LoadingActivator from '../global/LoadingActivator';
 
     const getCartProduct =  () => {
          totalCalculation()
-
         var cart_url=websiteApi+"allCart"; 
         let config={method:'GET'}
       fetch(cart_url,config).then((result)=>result.json()). 
@@ -101,7 +100,7 @@ var  cart= await response.json();
  
     return (
      
-      <Container style={{flex:10,backgroundColor:'#f2f2f2'}} >
+      <Container style={{flex:10,backgroundColor:'#ddd'}} >
       <Header>
           <Left>
             <Button onPress={() => props.navigation.goBack(null)}    transparent>

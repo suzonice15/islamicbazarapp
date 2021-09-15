@@ -8,8 +8,8 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, Footer as FooterC
  
  
     return (
-        <FooterComponent>
-        <FooterTab>
+        <FooterComponent style={{backgroundColor:"black"}}>
+        <FooterTab style={{backgroundColor:"black"}} >
           <Button vertical onPress={() => props.navigation.navigate('Home')}>
             <Icon name="home"  type="AntDesign" />
             <Text>Home</Text>
@@ -19,12 +19,12 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, Footer as FooterC
             <Icon name="shoppingcart" type="AntDesign" />
             <Text>Cart</Text>
           </Button>
-          <Button badge vertical active onPress={() => props.navigation.navigate('Wishlist')}>
+          <Button badge vertical  onPress={() => props.navigation.navigate('Wishlist')}>
           <Badge ><Text>9</Text></Badge>
             <Icon active name="hearto" type="AntDesign" />
             <Text>Wishlist</Text>
           </Button>
-          <Button vertical>
+          <Button vertical onPress={() => props.navigation.navigate('login')}>
             <Icon name="user" type="AntDesign" />
             <Text>Account</Text>
           </Button>

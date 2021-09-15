@@ -131,7 +131,7 @@ getCategory=()=>{
       <FlatList      
         numColumns={2}
         data={products}
-        renderItem={({item})=><HomeProduct navigation={props.navigation} folder={item.folder}  product_id={item.product_id} main_image={item.main_image} />}
+        renderItem={({item})=><HomeProduct navigation={props.navigation} folder={item.folder} product_title={item.product_title}  product_id={item.product_id} main_image={item.main_image} />}
         keyExtractor={(item) => item.product_id}    
        
       />      

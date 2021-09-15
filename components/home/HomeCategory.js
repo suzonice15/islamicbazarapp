@@ -7,7 +7,8 @@ import { API_Category_Image_Url } from '../global/url';
     return (   
       <TouchableWithoutFeedback  
       underlayColor='none' onPress={()=>navigation.navigate('Category', {         
-        category_id:category_id,         
+        category_id:category_id,
+        category_title:category_title         
           })}
           >
         <View style={{flex:1,flexDirection:'column',backgroundColor:'#f2f2f2',margin:5}}>

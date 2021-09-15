@@ -92,24 +92,16 @@ function Sidebar(props) {
           </Image> */}
                   <List>    
 
-                <ListItem onPress={() => props.navigation.navigate('Home')}>
-                  <Icon name="home" type="AntDesign"/>   
-                 <Text style={{marginLeft:10}}>Home</Text> 
-                </ListItem>
-
-                <ListItem onPress={() => props.navigation.navigate('AllBrand')}>
-                  <Icon name="hearto" type="AntDesign"/>   
-                 <Text style={{marginLeft:10}}>All brands </Text> 
-                </ListItem>
+                 
                 <ListItem onPress={() => props.navigation.navigate('AllCategory')}>
-                  <Icon name="hearto" type="AntDesign"/>   
+                  <Icon name="copyright" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}>All Category</Text> 
                 </ListItem>
 
-                <ListItem onPress={() => props.navigation.navigate('Offer')}>
+                {/* <ListItem onPress={() => props.navigation.navigate('Offer')}>
                   <Icon name="hearto" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}>Sunami Offer</Text> 
-                </ListItem>
+                </ListItem> */}
 
 
                 <ListItem onPress={() => props.navigation.navigate('Login')}>

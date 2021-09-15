@@ -24,8 +24,7 @@ getCategory=()=>{
       then((result)=>result.json()).
       then((response)=>{ 
         setLoding(false)
-               setCategory(category.concat(response.data))
-        
+               setCategory(category.concat(response.data))        
     }) .catch(error => {
         
       });
@@ -39,7 +38,11 @@ getMoreCategory =()=>{
       <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
       <Container>
          <HeaderComponent navigation={props.navigation} />  
-        <ScrollView scrollEnabled>  
+        <ScrollView scrollEnabled> 
+ 
+
+      <Text style={{textAlign:"center",padding:5,backgroundColor:"#2cb574",margin:5,color:"white",fontWeight:"bold"}}>All Categories
+</Text> 
         {loadding && <LoadingActivator />}        
        
       <FlatList
