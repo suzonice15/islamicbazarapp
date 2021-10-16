@@ -25,6 +25,9 @@ import BandProduct from '../brand/BandProduct'
 import CartComponent from '../cart/cart'
 import WishlistComponent from '../wishlist/wishlist'
 import LoginComponent from '../auth/Login'
+import RegistrationComponent from '../auth/Registration'
+import AllProductComponent from '../product/AllProduct'
+import OrderCreateComponent from '../order/Create'
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -56,6 +59,8 @@ export default function Route() {
    false }} />
     <Drawer.Screen name="AllCategory" component={AllCategoryComponent}   options={{ headerShown: 
    false }} />
+    <Drawer.Screen name="AllProduct" component={AllProductComponent}   options={{ headerShown: 
+   false }} />
    <Drawer.Screen name="AllBrand" component={AllBrandComponent}   options={{ headerShown: 
    false }} />
     <Drawer.Screen name="BandProduct" component={BandProduct}   options={{ headerShown: 
@@ -74,9 +79,13 @@ export default function Route() {
 <Drawer.Screen name="login" component={LoginComponent}   options={{ headerShown: 
    false }} />
 
-
+<Drawer.Screen name="Registration" component={RegistrationComponent}   options={{ headerShown: 
+   false }} />
 
         
+<Drawer.Screen name="OrderCreate" component={OrderCreateComponent}   options={{ headerShown: 
+   false }} />
+
         </Drawer.Navigator>
       </NavigationContainer>
     </View>

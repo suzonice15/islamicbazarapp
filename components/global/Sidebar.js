@@ -25,12 +25,13 @@ import {
   
 } from "native-base";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { AuthContext } from "./Context";
 import styles from './Style'
 const routes = ["Home", "Chat", "Profile"];
 function Sidebar(props) {
-  const {loginStatus,setLoginStatus} =useContext(AuthContext)
+  const {LoginAdminUser,setLoginAdminUser} =useContext(AuthContext)
 
   const onShare = async () => {
     try {
@@ -67,6 +68,12 @@ function Sidebar(props) {
       ).catch((err) => alert('Please check for the App Store'));
     }
   };
+
+  const Logout=async()=>{
+    setLoginAdminUser(false)
+    await AsyncStorage.removeItem("api_token");
+
+  }
       return (
        
 
@@ -82,17 +89,14 @@ function Sidebar(props) {
               justifyContent: "center",
               alignItems: "center"
             }} />
-            {/* <Image
-              square
-              style={{ height: 80, width: 70 }}
-              source={{
-                uri: "https://github.com/GeekyAnts/NativeBase-KitchenSink/raw/react-navigation/img/logo.png"
-              }}
-            />
-          </Image> */}
+          
+          
                   <List>    
 
-                 
+                  <ListItem onPress={() => props.navigation.navigate('AllProduct')}>
+                  <Icon name="product-hunt" type="FontAwesome"/>   
+                 <Text style={{marginLeft:10}}>All Product</Text> 
+                </ListItem>
                 <ListItem onPress={() => props.navigation.navigate('AllCategory')}>
                   <Icon name="copyright" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}>All Category</Text> 
@@ -104,10 +108,6 @@ function Sidebar(props) {
                 </ListItem> */}
 
 
-                <ListItem onPress={() => props.navigation.navigate('Login')}>
-                  <Icon name="user" type="AntDesign"/>   
-                 <Text style={{marginLeft:10}}>Sign In</Text> 
-                </ListItem>
 
                 <ListItem onPress={() => props.navigation.navigate('Wishlist')}>
                   <Icon name="hearto" type="AntDesign"/>   
@@ -152,10 +152,15 @@ function Sidebar(props) {
                  <Text style={{marginLeft:10}}>Privacy Policy</Text> 
                 </ListItem>
                
-                
-                
-              
-               
+                {LoginAdminUser ?  
+                <ListItem onPress={() => Logout() }>
+                  <Icon name="logout" type="AntDesign"/>   
+                 <Text style={{marginLeft:10}}>Log Out</Text> 
+                </ListItem>:
+                   <ListItem onPress={() => props.navigation.navigate('login')}>
+                   <Icon name="user" type="AntDesign"/>   
+                  <Text style={{marginLeft:10}}>Sign In</Text> 
+                 </ListItem> }
                 
 
                 </List>

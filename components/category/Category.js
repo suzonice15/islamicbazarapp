@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect ,useContext} from 'react';
 import {Toast, Thumbnail,Card,CardItem,Content,Container,Item,Badge, FooterTab,Text,Input, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { SliderBox } from "react-native-image-slider-box";
 import { Image, View,ScrollView,FlatList } from 'react-native';
@@ -9,15 +9,19 @@ import FooterComponent from '../global/Footer';
 import RenderItem from './RenderItem'
 import Offer from './Offer'
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoadingActivator from '../global/LoadingActivator';
 import ProductRender from '../brand/ProductRender';
+import { AuthContext } from '../global/Context';
 
 
   export default function Category(props) {
     const {category_id,category_title}=props.route.params
     const [products,setProduct]=useState([])
      const [loading,setLoading]=useState(true)
+      const {setUserCartItem,userCartItem}= useContext(AuthContext)
+
      const [page,setPage]=useState(1)
      useEffect(() => { 
     getCategory()  
@@ -47,7 +51,10 @@ const addToCart=(cart_product_id,product_title)=>{
 var add_cart_url=websiteApi+"addCart/"+cart_product_id+"/1"
 let config={method:'GET'}
 fetch(add_cart_url,config).then((result)=>result.json()). 
-then((response)=>{    
+then((response)=>{ 
+setUserCartItem(response)
+AsyncStorage.setItem("cart_count",response);
+
 console.log(response)
 }).catch((error)=>{
 

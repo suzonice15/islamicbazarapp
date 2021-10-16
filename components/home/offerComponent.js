@@ -3,28 +3,16 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, Footer,FooterTab,
  import { Image, View,ScrollView,TouchableWithoutFeedback } from 'react-native'; 
  import {API_Offer_Image_Url} from '../global/url'
 
-  export default function offerComponent({offer,navigation}) {  
- 
-    return (
-        <Content padder> 
-        {offer.map((row,index)=>(
-           <TouchableWithoutFeedback  key={index} 
-           underlayColor='none' onPress={()=>navigation.navigate('SingleOffer', {         
-            offer_name:row.offer_name,         
-             })}
-               >     
-      <Card >  
+  export default function offerComponent({offer_picture,navigation}) {  
+    console.log("fic="+offer_picture) 
+    return (      
+        <Content padder style={{flex:2}}>           
+      <Card  style={{flex:1}} >  
             <CardItem cardBody  >
-              <Image source={{uri: API_Offer_Image_Url+""+row.offer_picture}} style={{height: 200, width: null, flex: 1, resizeMode: 'stretch'}}/>
-            </CardItem>   
-                  
+              <Image source={{uri: API_Offer_Image_Url+""+offer_picture}} style={{height: 130, width: null, flex: 1, resizeMode: 'stretch'}}/>
+            </CardItem> 
       </Card>
-      </TouchableWithoutFeedback>   
-       ))}
       </Content>   
-     
-
-     
     );
  
 }

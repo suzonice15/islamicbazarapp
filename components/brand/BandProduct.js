@@ -16,8 +16,8 @@ useEffect(() => {
         fetch(brandUrl,config).
       then((result)=>result.json()).
       then((response)=>{ 
-        console.log(response)
-        setProduct(product.concat(response.data))        
+        setProduct(product.concat(response.data)) 
+
     }) .catch(error => {        
    });
  }, [page]) 
@@ -27,8 +27,7 @@ return (
       <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
       <Container>
          <HeaderComponent navigation={props.navigation} />  
-        <ScrollView scrollEnabled>          
-       
+        <ScrollView scrollEnabled> 
       <FlatList      
         numColumns={2}
         data={product}

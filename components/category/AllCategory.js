@@ -7,17 +7,19 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Badge, FooterTab,Text,In
 import FooterComponent from '../global/Footer';
  import HomeCategory from '../home/HomeCategory'
 import LoadingActivator from '../global/LoadingActivator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
   export default function AllCategory(props) {
    
     const [loadding,setLoding]=useState(true)
-
 const [category,setCategory]=useState([])
 const [page,setPage]=useState(1) 
+ 
 useEffect(() => { 
+ 
    getCategory() 
  }, [page]) 
-getCategory=()=>{  
+const getCategory=()=>{  
     let home_category_url=websiteApi+"/all-mobile-category-list?page="+page;  
     let config={method:'GET'}
         fetch(home_category_url,config).
@@ -29,7 +31,7 @@ getCategory=()=>{
         
       });
 }
-getMoreCategory =()=>{
+const getMoreCategory =()=>{
   setPage(page+1)
 }
  

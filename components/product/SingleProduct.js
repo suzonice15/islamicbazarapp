@@ -1,6 +1,6 @@
-import React, { useState,useEffect,useCallback } from 'react';
+import React, { useState,useEffect,useCallback, useContext } from 'react';
 import { Toast,Card,CardItem,Content,Container,Item,Badge,List, FooterTab,Text,Input, Left, Body, Right, Button, Icon, Title, ListItem } from 'native-base';
- import { FlatList,Image, Platform,View,ScrollView,TouchableWithoutFeedback,Alert } from 'react-native';
+ import { FlatList,Image, Platform,View,ScrollView,TouchableWithoutFeedback,Alert,StyleSheet } from 'react-native';
 import WhyChoose from '../global/whyChoose';
  import {API_Product_featured_Image_Url, websiteApi} from '../global/url'
  import HeaderComponent from '../global/Header';
@@ -10,14 +10,18 @@ import HTMLView from 'react-native-htmlview';
 import { WebView } from 'react-native-webview';
 import { useScrollToTop } from '@react-navigation/native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoadingActivator from '../global/LoadingActivator';
 import ProductPicture from './ProductPicture';
 import ProductCartSection from './ProductCartSection';
 import ProductRender from '../brand/ProductRender';
-
+import { AuthContext } from '../global/Context';
+ 
 
   export default function SingleProduct(props){
+ 
+   const {setUserCartItem,setUserWishlistItem}= useContext(AuthContext)
     const {product_id,product_title}=props.route.params
      const [loading,setLoading]=useState(false) 
      const [specifications, setSpecification]=useState([])
@@ -43,11 +47,9 @@ import ProductRender from '../brand/ProductRender';
      }) 
   const [products,setProduct]=useState({  
     products:[], 
-  })
-  
+  }) 
 
-useEffect(() => { 
-  
+useEffect(() => {   
     getProduct()  
     getSpecification(product_id)
       getRelatedProduct(product_id)
@@ -58,8 +60,7 @@ useEffect(() => {
  const getRelatedProductIdData=async()=>{
   const url=websiteApi+`relatedProductListById/${product_id}`;
  const  response=await fetch(url);
- var data=await response.json(); 
- 
+ var data=await response.json();  
  setRelatedProductIdData(data);
 }
 
@@ -67,7 +68,6 @@ useEffect(() => {
   var related_base_url=websiteApi+"related-product/"+product_id;
   axios.get(related_base_url).then((response)=>{  
     setRelated(response.data);
-
   }) 
   
 }
@@ -112,7 +112,8 @@ const addToCart=useCallback((product_title)=>{
     })
 var add_cart_url=websiteApi+"addCart/"+products.products.product_id+"/"+count
 axios.get(add_cart_url).then(response=>{  
- //setUserCartItem(response.data)/
+  setUserCartItem(response.data)
+  AsyncStorage.setItem("cart_count",response.data);
 })
 
  })
@@ -126,8 +127,8 @@ const BuyNow=useCallback((product_title)=>{
   })
 var add_cart_url=websiteApi+"addCart/"+products.products.product_id+"/"+count
 axios.get(add_cart_url).then(response=>{
-
-//setUserCartItem(response.data)/
+  setUserCartItem(response.data)
+  AsyncStorage.setItem("cart_count",response.data);
 })
 
 })
@@ -139,10 +140,10 @@ axios.get(add_cart_url).then(response=>{
     type: "success"
   })     
 var wishlistUrl=websiteApi+"addWishlist/"+products.products.product_id+"/"+count
-axios.get(wishlistUrl).then(response=>{
-  console.log(response.data)
-//setUserWishlistItem(response.data)
-//localStorage.setItem('wishlist_count',response.data)
+axios.get(wishlistUrl).then(response=>{  
+  setUserWishlistItem(response.data)
+  AsyncStorage.getItem('wishlist_count',response.data)
+
 })
 })
 
@@ -211,7 +212,9 @@ var add_cart_url=websiteApi+"addCart/"+cart_product_id+"/1"
 let config={method:'GET'}
 fetch(add_cart_url,config).then((result)=>result.json()). 
 then((response)=>{    
-console.log(response)
+
+  setUserCartItem(response.data)
+  AsyncStorage.setItem("cart_count",response);
 }).catch((error)=>{
 
 })
@@ -223,6 +226,7 @@ const DescriptionDataLoad=()=>{
     return (
       <CardItem cardBody > 
        <View ><HTMLView
+        stylesheet={styles}
       
       value={products.products.product_description}
      
@@ -241,8 +245,7 @@ const DescriptionDataLoad=()=>{
               <Body><Text>{row.value}</Text></Body>    
               </ListItem>
             )          
-          )}      
-          
+          )} 
           </List>
          
     )
@@ -267,21 +270,19 @@ const DescriptionDataLoad=()=>{
   }  
 }
  
- 
-    return (
+return (
       <View style={{flex:1,backgroundColor:'#f2f2f2'}}>
       <Container>
          <HeaderComponent navigation={props.navigation} />  
-        <ScrollView ref={ref} scrollEnabled style={{backgroundColor:"#fff"}}>       
-       
+        <ScrollView ref={ref} scrollEnabled style={{backgroundColor:"#fff"}}>  
         <View style={{flex:2,flexDirection:"row",padding:10,justifyContent:"center"}}>
   <View style={{flex:1,backgroundColor:"#2cb574",}}>
       <Text style={{textAlign:"center",padding:2,margin:5,color:"white",fontWeight:"bold"}}>{product_title}</Text>
 </View>  
  </View>  
 
-
-     
+ { loading ?    
+        <>
    <ProductPicture 
     setMainPictureFunction={setMainPictureFunction} 
     mainPicture={mainPicture.mainPicture} 
@@ -289,11 +290,6 @@ const DescriptionDataLoad=()=>{
      galary_image_1={mainPicture.galary_image_1} 
      galary_image_2={mainPicture.galary_image_2} 
       main_image={mainPicture.main_image} />
-        
-        { loading ?    
-
-        <>
-
       <ProductCartSection  
       count={count}
       increment={increment}
@@ -319,32 +315,23 @@ const DescriptionDataLoad=()=>{
           <Card>
           
             <CardItem cardBody >
-
+       
         <View style={{flex:1,flexDirection:"row",justifyContent:"space-between",borderRadius:50}}>
           <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('description')}>
           <Text   style={active.descriptionActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"30%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"30%"}}>Description</Text>
-
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('specification')}>
-
             <Text   style={active.specificationActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"35%"} :{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"35%"} }>Specifications</Text>
-           
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('review')}>
-
             <Text  style={active.reviewActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"18.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"18.5%"}}>Riview</Text>
             </TouchableWithoutFeedback>
-
-
             <TouchableWithoutFeedback  onPress={()=>descriptionActiveFunction('video')}>
             <Text  style={active.videoActive ? {padding:7,color:"white",textAlign:"center",backgroundColor:"#323071",width:"17.5%"}:{padding:7,color:"white",textAlign:"center",backgroundColor:"#2cb574",width:"17.5%"}}>Video</Text>
             </TouchableWithoutFeedback>
-            
+         </View>
 
-
-              </View>
-            </CardItem>
-             
+            </CardItem>             
           </Card>
         </Content>  
 
@@ -362,16 +349,10 @@ const DescriptionDataLoad=()=>{
          discount_price={item.discount_price} product_price={item.product_price} 
          addToCart={addToCartProduct}
          />}
-        keyExtractor={(item) => item.product_id}  
-        
-        
-      
-         
+        keyExtractor={(item) => item.product_id}           
       />  
 
 </> :<LoadingActivator  />}
-
-
 
       
      </ScrollView>
@@ -382,3 +363,14 @@ const DescriptionDataLoad=()=>{
     );
  
 }
+
+const styles = StyleSheet.create({
+  a: {
+    fontWeight: '300',
+    color: '#FF3366', // make links coloured pink
+  },
+  p:{
+    lineHeight:15,
+    fontSize:15,marginBottom:-25
+  }
+});

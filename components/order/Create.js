@@ -7,10 +7,10 @@ import { Thumbnail,Card,CardItem,Content,Container,Item,Toast,ListItem, Header,T
  import HomeCategory from '../home/HomeCategory'
 import LoadingActivator from '../global/LoadingActivator';
 import { AuthContext } from '../global/Context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-  export default function Cart(props) {    
-   const {setUserCartItem,userCartItem}= useContext(AuthContext)
+  export default function Create(props) {
+    
+   const {setUserCartItem}= useContext(AuthContext)
     const [modalVisible, setModalVisible] = useState(false);
     const [subtotal, setSubtotal] = useState(0)
     const [loadding,setLoding]=useState(true)    
@@ -36,9 +36,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
       };  
      
       useEffect(()=>{         
-        getCartProduct()              
+        getCartProduct()
+              
         setLoding(false)
-      },[userCartItem])
+      },[loadding])
 
       const Increment=async(cart_id,product_title)=>{
         Toast.show({
@@ -120,15 +121,9 @@ AsyncStorage.setItem("cart_count",cart);
               <Icon style={{color:"#000"}} name='arrow-back' />
             </Button>
           </Left>
-
           <Body>
-            <Title>Shopping Cart</Title>
-          </Body>
-          <Right>
-            <Button onPress={() => setModalVisible(true)} transparent>
-              <Icon style={{color:"#000"}} name='trash' />
-            </Button>
-          </Right>
+            <Title>Checkout Information</Title>
+          </Body>          
         </Header>
         <View style={{flex:9}}>
 
@@ -148,8 +143,7 @@ AsyncStorage.setItem("cart_count",cart);
           <View style={{flex:4,flexDirection:"row",justifyContent:"center"}}>
               <Text style={{alignSelf:"center"}}>{cart.product_name}</Text>
               </View>
-          <View style={{flex:4,flexDirection:"column",justifyContent:"center"}}>
-         
+          <View style={{flex:4,flexDirection:"column",justifyContent:"center"}}>         
               <View>
               <Text style={{alignSelf:"center"}}>{cart.price}*{cart.qty}={cart.subtotal}</Text>
               </View> 
@@ -157,8 +151,7 @@ AsyncStorage.setItem("cart_count",cart);
               <TouchableWithoutFeedback onPress={()=>Decrement(cart.cart_id,cart.product_name)}>
               <Text > <Icon name="minus-circle" type="FontAwesome5" /> </Text>
               </TouchableWithoutFeedback>
-              <Text>{cart.qty}</Text>
-              
+              <Text>{cart.qty}</Text>              
               <TouchableWithoutFeedback onPress={()=>Increment(cart.cart_id,cart.product_name)}>
               <Text ><Icon name="plus-circle" type="FontAwesome5" /></Text>
              </TouchableWithoutFeedback>
@@ -166,8 +159,7 @@ AsyncStorage.setItem("cart_count",cart);
               <Text>
                 <Icon style={{color:"red"}} name="ios-trash-sharp" type="Ionicons" /></Text>
               </TouchableWithoutFeedback>
-              </View>
-             
+              </View>             
           </View>
 
           
@@ -181,8 +173,8 @@ AsyncStorage.setItem("cart_count",cart);
 </View>
 <View style={{flex:1,flexDirection:"row",justifyContent:"space-evenly",alignItems:"center",backgroundColor:"#ddd"}}> 
   <Text style={{fontSize:20}}>Total : {currencyFormat(subtotal)}</Text>   
-  <Button  style={{alignSelf:"center"}}   dark onPress={() => props.navigation.navigate('OrderCreate')}>           
-<Text>Check Out </Text>
+  <Button  style={{alignSelf:"center"}}   dark onPress={() => props.navigation.navigate('Home')}>           
+<Text>Check Out</Text>
 </Button>
 </View>
 
@@ -201,7 +193,9 @@ AsyncStorage.setItem("cart_count",cart);
 
 <View style={{flexDirection:"row",marginTop:20,justifyContent:"space-evenly",alignItems:"center"}}>
  
-<Pressable  onPress={() => setModalVisible(!modalVisible)}
+<Pressable
+              
+              onPress={() => setModalVisible(!modalVisible)}
             >
   <Text style={{marginRight:20}}>Cancel</Text>
   </Pressable>

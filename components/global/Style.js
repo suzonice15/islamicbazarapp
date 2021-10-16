@@ -2,9 +2,9 @@ import { StyleSheet,Dimensions  } from 'react-native';
 const window = Dimensions.get("window");
 const styles = StyleSheet.create({
   formSection: {
-      flex:5,
-      paddingTop:35,
-      flexDirection:"column"
+      flex:3,     
+      flexDirection:"column",
+      marginTop:80,
 
   },
   homePageProgaqmHeader:{
@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   signUpButton:{
     backgroundColor:"#1d7e00",
     color:"white",
-    padding:5
+    padding:5,
+    borderRadius:10
   },
   formBottomSection: {
     flex:3,
@@ -30,10 +31,12 @@ const styles = StyleSheet.create({
 
 },
 loginSection:{
-    flex:2,flexDirection:'column',padding:10
+    flex:2,
+    flexDirection:'column',
+    padding:7
 },
 loginButton:{
-    flex:1,      
+    flex:2,      
    alignSelf:"center",  
   backgroundColor:"#1d7e00",
   color:"white",
