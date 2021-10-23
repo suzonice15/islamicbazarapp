@@ -40,7 +40,7 @@ import { AuthContext } from './Context';
           </Button>
 
            {LoginAdminUser ? 
-          <Button vertical onPress={() => props.navigation.navigate('Home')}>
+          <Button vertical onPress={() => props.navigation.navigate('Account')}>
             <Icon name="user" type="AntDesign" />
             <Text>Profile  </Text>
           </Button> :

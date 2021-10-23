@@ -81,18 +81,17 @@ function Sidebar(props) {
         <Content>
         <Image
             source={{
-              uri: "https://adminpanel.jncomputerbd.com/logo.png.webp"
+              uri: "https://www.adminpanel.islamicbazaarbd.com/logo.png.webp"
             }}
             style={{
+                       
               height: 80,
-              alignSelf: "stretch",
-              justifyContent: "center",
-              alignItems: "center"
+               width: null, 
+               flex: 1, 
+               resizeMode: 'stretch',
+              marginTop:10
             }} />
-          
-          
-                  <List>    
-
+             <List>  
                   <ListItem onPress={() => props.navigation.navigate('AllProduct')}>
                   <Icon name="product-hunt" type="FontAwesome"/>   
                  <Text style={{marginLeft:10}}>All Product</Text> 
@@ -109,7 +108,7 @@ function Sidebar(props) {
 
 
 
-                <ListItem onPress={() => props.navigation.navigate('Wishlist')}>
+                {/* <ListItem onPress={() => props.navigation.navigate('Wishlist')}>
                   <Icon name="hearto" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}>Wishlist</Text> 
                 </ListItem>
@@ -117,13 +116,13 @@ function Sidebar(props) {
                 <ListItem  >
                   <Icon name="phone" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}>Contact Us</Text> 
-                </ListItem>
+                </ListItem> */}
               
                 <ListItem onPress={()=>props.navigation.navigate('Page', {
             pageLink:'about-us',
              
           })}>
-                  <Icon name="open-book" type="Entypo"/>   
+                  <Icon name="calendar" type="AntDesign"/>   
                  <Text style={{marginLeft:10}}> About Us</Text> 
                 </ListItem>
                 <ListItem onPress={()=>props.navigation.navigate('Page', {

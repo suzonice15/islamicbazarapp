@@ -10,8 +10,7 @@ import { API_Product_featured_Image_Url } from '../global/url';
         product_id:product_id, 
         product_title:product_title,
         main_image:main_image,
-        folder:folder
-                
+        folder:folder                
           })}
           >
         <View style={{flex:1,flexDirection:'column',backgroundColor:'#f2f2f2',margin:5}}>

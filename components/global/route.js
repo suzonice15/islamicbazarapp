@@ -28,6 +28,12 @@ import LoginComponent from '../auth/Login'
 import RegistrationComponent from '../auth/Registration'
 import AllProductComponent from '../product/AllProduct'
 import OrderCreateComponent from '../order/Create'
+import AccountComponent from '../user/Account'
+import ProfileComponent from '../user/Profile'
+import UserOrderComponent from '../user/Order'
+import SingleOrderComponent from '../user/SingleOrder'
+import SingleOrderViewComponent from '../user/SingleOrderView'
+import UserAddressComponent from '../user/UserAddress'
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -85,6 +91,23 @@ export default function Route() {
         
 <Drawer.Screen name="OrderCreate" component={OrderCreateComponent}   options={{ headerShown: 
    false }} />
+           
+<Drawer.Screen name="Account" component={AccountComponent}   options={{ headerShown: 
+   false }} />
+   <Drawer.Screen name="Profile" component={ProfileComponent}   options={{ headerShown: 
+   false }} />
+      <Drawer.Screen name="UserOrder" component={UserOrderComponent}   options={{ headerShown: 
+   false }} />
+     <Drawer.Screen name="SingleOrder" component={SingleOrderComponent}   options={{ headerShown: 
+   false }} />
+   <Drawer.Screen name="SingleOrderView" component={SingleOrderViewComponent}   options={{ headerShown: 
+   false }} />
+      <Drawer.Screen name="UserAddress" component={UserAddressComponent}   options={{ headerShown: 
+   false }} />
+   
+   
+   
+   
 
         </Drawer.Navigator>
       </NavigationContainer>

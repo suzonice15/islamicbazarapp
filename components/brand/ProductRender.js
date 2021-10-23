@@ -5,11 +5,7 @@ import {  API_Product_featured_Image_Url,api_base_url } from '../global/url';
 import axios from 'axios'
   export default function ProductRender({addToCart,product_title,main_image,product_id,folder,discount_price,product_price,navigation}) {
  
-
-    
-
- 
-    return (   
+  return (   
       <TouchableWithoutFeedback  
       underlayColor='none'
      onPress={()=>navigation.navigate('Product', 

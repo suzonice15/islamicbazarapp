@@ -8,6 +8,7 @@ const Context = ({ children }) => {
     const globalWidth = useWindowDimensions().width;
     const globalHeight = useWindowDimensions().height;
  const [LoginAdminUser,setLoginAdminUser]=useState(false)    
+ const [userId,setUserId]=useState("")    
     const [userCartItem,setUserCartItem]=useState(0)
     const [userWishlistItem,setUserWishlistItem]=useState(0)
      const [modalShow,setModalShow]=useState(true)  
@@ -39,7 +40,7 @@ const Context = ({ children }) => {
     
     
     return (       
-          <AuthContext.Provider value={{LoginAdminUser,setLoginAdminUser,userCartItem,userWishlistItem,setUserWishlistItem, setUserCartItem,globalWidth,globalHeight}}>
+          <AuthContext.Provider value={{userId,setUserId,LoginAdminUser,setLoginAdminUser,userCartItem,userWishlistItem,setUserWishlistItem, setUserCartItem,globalWidth,globalHeight}}>
           {children}
         </AuthContext.Provider>
     );
