@@ -1,6 +1,6 @@
 import React, { useState,useEffect, useContext } from 'react';
-import { Thumbnail,Card,CardItem,Content,Container,Item,Toast,ListItem, Header,Text,Input, Left, Body, Right, Button, Icon, Title } from 'native-base';
- import { Pressable,StyleSheet,Modal,Image, View,ScrollView,TouchableWithoutFeedback } from 'react-native';
+import {List,Form, Thumbnail,Card,CardItem,Content,Container,Item,Toast,ListItem, Header,Text,Input, Left, Body, Right, Button, Icon, Title } from 'native-base';
+ import { TextInput,Pressable,StyleSheet,Modal,Image, View,ScrollView,TouchableWithoutFeedback } from 'react-native';
   import {websiteApi,API_Category_Image_Url, API_Product_featured_Image_Url} from '../global/url'
 
  import FooterComponent from '../global/Footer';
@@ -14,7 +14,34 @@ import { AuthContext } from '../global/Context';
     const [modalVisible, setModalVisible] = useState(false);
     const [subtotal, setSubtotal] = useState(0)
     const [loadding,setLoding]=useState(true)    
-    const [carts,setCart]=useState([])   
+    const [carts,setCart]=useState([])  
+    
+ const [divisionModal,setDivisionModal]  =useState(false)
+ const [areaModal,setAreaModal]  =useState(false)
+ const [districtModal,setDistrictModal]  =useState(false)
+    const [registration,setRegistration]=useState({
+      name:"",
+      phone:"",
+      password:"",
+      otp:"",
+      user_otp:0,
+      address:"",
+      division_id:"",
+      division_name:"----Select----",
+     district_id:"",
+      district_name:"Select Division",
+     upazila_id:"",
+       upazila_name:"Select District",
+       divistions:[],
+       districts:[],
+       upazilas:[],    
+      phone_active:true,
+      otp_active:false,
+      registration_active:false,
+      otp_submit:"Next",
+      confirm_submit:"Confirm"
+ 
+    }) 
 
     const getCartProduct =  () => {
          totalCalculation()
@@ -128,8 +155,10 @@ AsyncStorage.setItem("cart_count",cart);
         <View style={{flex:9}}>
 
         <View style={{flex:8}}>
-        <ScrollView style={{marginTop:20}}>  
-        {loadding && <LoadingActivator />}       
+        <ScrollView style={{marginTop:2}}>  
+        {loadding && <LoadingActivator />}   
+
+        <Text style={{textAlign:"center",backgroundColor:"green",color:"white",padding:7,margin:2}}>Order Summary</Text>    
 
       {carts.map((cart)=>{
 
@@ -147,19 +176,7 @@ AsyncStorage.setItem("cart_count",cart);
               <View>
               <Text style={{alignSelf:"center"}}>{cart.price}*{cart.qty}={cart.subtotal}</Text>
               </View> 
-              <View style={{flex:1,flexDirection:"row",justifyContent:"space-around"}}> 
-              <TouchableWithoutFeedback onPress={()=>Decrement(cart.cart_id,cart.product_name)}>
-              <Text > <Icon name="minus-circle" type="FontAwesome5" /> </Text>
-              </TouchableWithoutFeedback>
-              <Text>{cart.qty}</Text>              
-              <TouchableWithoutFeedback onPress={()=>Increment(cart.cart_id,cart.product_name)}>
-              <Text ><Icon name="plus-circle" type="FontAwesome5" /></Text>
-             </TouchableWithoutFeedback>
-             <TouchableWithoutFeedback onPress={()=>cartDelete(cart.cart_id,cart.product_name)}>
-              <Text>
-                <Icon style={{color:"red"}} name="ios-trash-sharp" type="Ionicons" /></Text>
-              </TouchableWithoutFeedback>
-              </View>             
+                          
           </View>
 
           
@@ -167,16 +184,105 @@ AsyncStorage.setItem("cart_count",cart);
      )
         
          })} 
+         <View style={{alignItems:"flex-end",}}>
+           <Text style={{borderTopColor:"black",borderTopWidth:2,color:"black",fontWeight:"bold",fontSize:20,marginRight:15}}>Total:{currencyFormat(subtotal)}</Text>
+           </View>
+
+           <Text style={{textAlign:"center",backgroundColor:"green",color:"white",padding:7,margin:2}}>Customer Information</Text>    
+
+
+
+           <Form>
+       <Item>
+ <Text style={{marginLeft:5,marginRight:5}}>Name :</Text>
+<Input   onChangeText={value=>setRegistration({...registration,name:value})}  value={registration.name} placeholder="Enter Your Name"/>
+ </Item>
+ <Item>
+ <Text style={{marginLeft:5,marginRight:5}}>Mobile :</Text>
+<Input    value={registration.phone}  editable = {false}/>
+ </Item>
+ <List> 
+            <ListItem >
+              <Left>
+                <Text>Division</Text>
+              </Left>
+              <Body>
+              <Pressable  onPress={() => setDivisionModal(true)}     >
+              <Text>{registration.division_name}</Text>
+                </Pressable>
+            
+              </Body>
+              <Right>
+              <Pressable  onPress={() => setDivisionModal(true)}     >
+                <Icon name="caretdown"  type="AntDesign" />
+                </Pressable>
+              </Right>
+            </ListItem>
+
+            <ListItem >
+              <Left>
+                <Text>District</Text>
+              </Left>
+              <Body>
+              <Pressable  onPress={() => setDistrictModal(true)}     >
+              <Text>{registration.district_name}</Text>
+                </Pressable>
+            
+              </Body>
+              <Right>
+              <Pressable  onPress={() => setDistrictModal(true)}     >
+                <Icon name="caretdown"  type="AntDesign" />
+                </Pressable>
+              </Right>
+            </ListItem>
+
+            <ListItem >
+              <Left>
+                <Text>Area</Text>
+              </Left>
+              <Body>
+              <Pressable  onPress={() => setAreaModal(true)}  >
+              <Text>{registration.upazila_name}</Text>
+                </Pressable>            
+              </Body>
+              <Right>
+              <Pressable  onPress={() => setAreaModal(true)}     >
+                <Icon name="caretdown"  type="AntDesign" />
+                </Pressable>
+              </Right>
+            </ListItem> 
+
+            </List>
+ <Item>
+ <Text style={{marginLeft:5,marginRight:5}}>Address :</Text>
+ </Item>
+ 
+ <View style={styles.textAreaContainer}>
+  <TextInput
+      style={styles.textArea}
+       placeholder="Enter Your Address"
+      placeholderTextColor="grey"
+      numberOfLines={2}
+      multiline={true}
+      value={registration.address}
+      onChangeText={value=>setRegistration({...registration,address:value})}
+    />
+
+
+ </View>
+ 
+ {registration.confirm_submit =="Confirm" ? 
+ <Button full success onPress={()=>registrationSubmit} style={{margin:5}}>
+            <Text>{registration.confirm_submit}</Text>
+          </Button>:  <Button full success  style={{margin:5}}>
+            <Text>{registration.confirm_submit}</Text>
+          </Button> }
+</Form>
       
      </ScrollView>
           
 </View>
-<View style={{flex:1,flexDirection:"row",justifyContent:"space-evenly",alignItems:"center",backgroundColor:"#ddd"}}> 
-  <Text style={{fontSize:20}}>Total : {currencyFormat(subtotal)}</Text>   
-  <Button  style={{alignSelf:"center"}}   dark onPress={() => props.navigation.navigate('Home')}>           
-<Text>Check Out</Text>
-</Button>
-</View>
+ 
 
 
 <Modal

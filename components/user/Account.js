@@ -117,7 +117,7 @@ export default function Account({navigation}) {
             </Right>
           </ListItem>
           
-          <ListItem icon>
+          {/* <ListItem icon>
             <Left>
               <Button style={{ backgroundColor: "#007AFF" }}>
                 <Icon   name="clipboard-list" type="FontAwesome5" />
@@ -130,7 +130,7 @@ export default function Account({navigation}) {
             
               <Icon active name="arrow-forward" />
             </Right>
-          </ListItem>
+          </ListItem> */}
 
           <ListItem icon onPress={() => Logout() }>
             <Left>
